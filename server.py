@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import os
-API_KEY = os.environ.get("AIzaSyAkvX2qyIbjmk-uppwMPkPdokGqk__Y9wg")
+API_KEY = os.environ.get("GEMINI_API_KEY")
 app = Flask(__name__)
 CORS(app)
 
