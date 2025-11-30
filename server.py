@@ -2,36 +2,25 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 
-API_KEY = "AIzaSyAkvX2qyIbjmk-uppwMPkPdokGqk__Y9wg"
-
-GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    user_prompt = request.json.get("prompt")
+API_KEY = "YOUR_API_KEY"
 
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    prompt = request.json.get("prompt")
     headers = {
-        "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
+        "X-goog-api-key": API_KEY
     }
-
-    data = {
-        "model": "llama3-8b-instant",
-        "messages": [
-            {"role": "user", "content": user_prompt}
-        ]
-    }
-
-    response = requests.post(GROQ_URL, json=data, headers=headers)
-    result = response.json()
-    answer = result["choices"][0]["message"]["content"]
-
-    return jsonify({"answer": answer})
-
-
-@app.route("/")
-def home():
-    return "Backend is running!"
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    try:
+        resp = requests.post(GEMINI_URL, headers=headers, json=payload)
+        data = resp.json()
+        answer = data["candidates"][0]["content"]["parts"][0]["text"]
+        return jsonify({"answer": answer})
+    except Exception as e:
+        return jsonify({"answer": f"❌ Error: {str(e)}"})
