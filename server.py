@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-API_KEY = "YOUR_API_KEY"
+API_KEY = "AIzaSyAkvX2qyIbjmk-uppwMPkPdokGqk__Y9wg"
 
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
@@ -16,6 +16,9 @@ def ask():
         "Content-Type": "application/json",
         "X-goog-api-key": API_KEY
     }
+@app.route("/", methods=["GET"])
+def home():
+    return {"message": "AI Tutor server is running"}
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     try:
         resp = requests.post(GEMINI_URL, headers=headers, json=payload)
