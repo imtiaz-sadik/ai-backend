@@ -10,11 +10,12 @@ GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    prompt = request.json.get("prompt")
-    headers = {
-        "Content-Type": "application/json",
-        "X-goog-api-key": API_KEY
-    }
+    try:
+        user_prompt = request.json.get("prompt", "")
+        answer = ask_gemini(user_prompt)
+        return jsonify({"answer": answer})
+    except Exception as e:
+        return jsonify({"answer": f"❌ ERROR: {str(e)}"})
 @app.route("/", methods=["GET"])
 def home():
     return {"message": "AI Tutor server is running"}
