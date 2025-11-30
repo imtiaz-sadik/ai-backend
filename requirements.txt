@@ -1,4 +1,6 @@
+fastapi
+uvicorn
+requests
 flask
 flask-cors
-requests
 gunicorn
